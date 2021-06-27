@@ -53,7 +53,7 @@ def avg_calc(row, event=1):
 	conv_times = []
 
 	for i in times:
-		if str(i).upper() == "DNF":
+		if str(i).upper() == "DNF" or str(i).upper == "DNS":
 			dnf_counter += 1
 			continue
 		elif str(i) == "":
@@ -75,8 +75,44 @@ def avg_calc(row, event=1):
 # %%
 # Compute A05
 for i in range(1, no_of_events + 1):
-	df[f"e{i}a05"] = df.apply(lambda row: avg_calc(row, i), axis=1)
+	df[f"e{i}ao5"] = df.apply(lambda row: avg_calc(row, i), axis=1)
 
 df
+
+# %%
+
+df.sort_values('e1ao5', inplace=True)
+# %%
+df
+# %%
+results = df[['e1ao5', 'name', 'institute']]
+results.columns = ['AO5', 'Name', 'Institute']
+results.dropna(inplace=True)
+
+results
+# %%
+results.to_csv("teste1.tsv", index=False, sep='\t')
+# %%
+
+def whatsapp_string(row):
+	return f"• {row['AO5']:.2f} - {row['Name']} - {row['Institute']}"
+
+def markdown_string(row):
+	return f"| {row['AO5']:.2f} | {row['Name']} | {row['Institute']} |"
+
+results['whatsapp_str'] = results.apply(whatsapp_string, axis=1)
+results['markdown_str'] = results.apply(markdown_string, axis=1)
+
+results
+# %%
+for i in range(len(results)):
+	print(results.iloc[i]['whatsapp_str'])
+
+print()
+print("Markdown\n")
+print("| Average | Name | Institute |")
+print("| :---: | --- | --- |")
+for i in range(len(results)):
+	print(results.iloc[i]['markdown_str'])
 
 # %%

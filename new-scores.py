@@ -8,7 +8,22 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 # %%
 def ao5_calc(row, event=1):
+	"""Compute Average of 5 for a given row and event id
+	as per Regulations 9f8 and 9f9
+
+	Args:
+		row (pd.DataFrame row): DataFrame row containing name, institute and times
+		event (int, optional): Event Number. Defaults to 1.
+
+	Returns:
+		float or str: AO5 score or DNF
+	"""
+
+	# Generate event time column names
+	# For example, in event=1: e1t1, e1t2, e1t3, e1t4, e1t5
 	indexes = [f"e{event}t{i}" for i in range(1, 6)]
+
+	# Get times for the event
 	times = [row[index] for index in indexes]
 
 	dnf_counter = 0
@@ -22,19 +37,35 @@ def ao5_calc(row, event=1):
 			dnf_counter += 1
 			continue
 		conv_times.append(float(i))
+
+	# If there are 2 or more DNFs (or DNS), return DNF
+	# As per Regulation 9f9
 	if dnf_counter >= 2:
 		return("DNF")
+
+	# Sum all times
 	temp = sum(conv_times)
 
+	# If all times present, subtract best and worst
 	if len(conv_times)==5 :
 		tt = temp - max(conv_times) - min(conv_times)
 		return round(tt/3.0,2)
+	
+	# If one attempt is DNF/DNS, subtract only the best (as DNF/DNS is the worst)
 	elif len(conv_times)==4 :
 		tt = temp - min(conv_times)
 		return round(tt/3.0,2)
 
 
 def whatsapp_string(row):
+	"""Generate WhatsApp String for a given DataFrame row
+
+	Args:
+		row (pd.DataFrame row): DataFrame row containing AO5, Name, Insitute data
+
+	Returns:
+		str: WhatsApp String of the form "• A05 - Name - Institute"
+	"""
 	return f"• {str(row['AO5'])} - {row['Name']} - {row['Institute']}"
 
 # %%
@@ -52,7 +83,14 @@ def format_time(time):
 
 # %%
 def scores(responses="responses.csv", eventdate=date.today().isoformat()):
-	
+	"""Scores calculation and printing for a given event date
+	It generates results in the results directory, 
+	and also prints WhatsApp and Markdown Strings to the screen
+
+	Args:
+		responses (str, optional): File name of responses data. Defaults to "responses.csv".
+		eventdate (str, optional): Event date in ISO Format. Defaults to date.today().isoformat().
+	"""
 	# Read responses file
 	df = pd.read_csv(responses)
 
@@ -91,7 +129,7 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 	if df.empty:
 		print("No data for given event date. Supply a valid date.")
-		return None
+		return
 	
 	# Compute AO5 for each event
 	for i in range(1, no_of_events + 1):
@@ -147,6 +185,6 @@ if __name__ == "__main__":
 	# Create results directory if not present
 	if not os.path.isdir('results'):
 		os.mkdir('results')
-		
+
 	scores(eventdate='2021-06-05')
 # %%

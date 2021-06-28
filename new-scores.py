@@ -43,6 +43,19 @@ def whatsapp_string(row):
 	return f"• {row['AO5']:.2f} - {row['Name']} - {row['Institute']}"
 
 # %%
+def format_time(time):
+
+	# Remove the last four zeros in microseconds
+	time = time[:-4]
+
+	# If minutes is 00, remove it
+	minutes = time[:2]
+	if minutes == "00":
+		time = time[3:]
+
+	return time
+
+# %%
 def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 	
 	# Read responses file

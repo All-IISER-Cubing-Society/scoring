@@ -7,11 +7,6 @@ from datetime import date, datetime
 pd.options.mode.chained_assignment = None  # default='warn'
 
 # %%
-
-# Create results directory if not present
-if not os.path.isdir('results'):
-	os.mkdir('results')
-
 def ao5_calc(row, event=1):
 	indexes = [f"e{event}t{i}" for i in range(1, 6)]
 	times = [row[index] for index in indexes]
@@ -149,5 +144,9 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 # %%
 if __name__ == "__main__":
+	# Create results directory if not present
+	if not os.path.isdir('results'):
+		os.mkdir('results')
+		
 	scores(eventdate='2021-06-05')
 # %%

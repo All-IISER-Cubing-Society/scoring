@@ -40,7 +40,7 @@ def ao5_calc(row, event=1):
 
 
 def whatsapp_string(row):
-	return f"• {row['AO5']:.2f} - {row['Name']} - {row['Institute']}"
+	return f"• {str(row['AO5'])} - {row['Name']} - {row['Institute']}"
 
 # %%
 def format_time(time):
@@ -124,8 +124,12 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 		results.to_csv(resultspath, index=False, sep='\t')
 		print(f"Event {i+1} Results saved to {resultspath}\n")
 
+		# Format time
+		results['AO5'] = pd.to_datetime(results['AO5'], unit='s').dt.strftime("%M:%S.%f")
+		results['AO5'] = results['AO5'].apply(format_time)
+
 		# Compute strings
-		markdown_str = results.to_markdown(index=False, colalign=('center', 'left', 'left'))
+		markdown_str = results.to_markdown(index=False, floatfmt=".2f", colalign=('center', 'left', 'left'))
 		results['whatsapp_str'] = results.apply(whatsapp_string, axis=1)
 
 		# Print Strings
@@ -144,5 +148,6 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 		
 
 # %%
-scores(eventdate='2021-06-26')
+if __name__ == "__main__":
+	scores(eventdate='2021-06-05')
 # %%

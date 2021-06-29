@@ -152,6 +152,10 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 		# Drop NA values
 		results.dropna(inplace=True)
 
+		# Create results directory if not present
+		if not os.path.isdir('results'):
+			os.mkdir('results')
+
 		# Save event results in TSV (Tab Separated Values) file
 		resultspath = f"results/{eventdatestr}_event_{i+1}.tsv"
 		results.to_csv(resultspath, index=False, sep='\t')
@@ -182,9 +186,5 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 # %%
 if __name__ == "__main__":
-	# Create results directory if not present
-	if not os.path.isdir('results'):
-		os.mkdir('results')
-
 	scores(eventdate='2021-06-05')
 # %%

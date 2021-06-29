@@ -64,7 +64,7 @@ def whatsapp_string(row):
 		row (pd.DataFrame row): DataFrame row containing AO5, Name, Insitute data
 
 	Returns:
-		str: WhatsApp String of the form "• A05 - Name - Institute"
+		str: WhatsApp String of the form "• AO5 - Name - Institute"
 	"""
 	return f"• {str(row['AO5'])} - {row['Name']} - {row['Institute']}"
 

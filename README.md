@@ -62,15 +62,19 @@ The following columns:
 
   The program takes the current date and the `responses.csv` filename by default.
 
-- Another date can be specified in the `YYYY-MM-DD` format (which is also called the ISO Format). Similarly, a separate filename can also be specified. Open the `new-scores.py` file and modify the very last function where the `scores` function is called as:
+- Another date can be specified in the `YYYY-MM-DD` format (which is also called the ISO Format). Similarly, a separate filename can also be specified. Date and filename can be given as command line arguments.
 
-  ```python
-  scores(eventdate='YYYY-MM-DD', responses='filename.csv')
+  Example Usages:
+
+  ```bash
+  $ python new-scores.py 2021-06-05     // filename taken as responses.csv by default
+  
+  $ python new-scores.py datafilename.csv    // current date taken as default
+  
+  $ python new-scores.py 2021-06-05 datafilename.csv   // both date and file provided
   ```
 
-  And then run the program.
-
-
+  
 
 ### Program Output
 

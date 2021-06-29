@@ -139,19 +139,30 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 	# Results Printing and Storing
 	for i in range(no_of_events):
-		eventname = f"e{i+1}ao5"
+		eventao5 = f"e{i+1}ao5"
+
+		# Sorting will fail if AO5 column contains DNF
+		# Replace DNF with 99999 temporarily
+		df[eventao5] = df[eventao5].replace("DNF", 99999)
 
 		# Sort by event
-		df.sort_values(eventname, inplace=True)
+		df.sort_values(eventao5, inplace=True)
+
+		# Replace 99999 with DNF again
+		df[eventao5] = df[eventao5].replace(99999, "DNF")
 
 		# Extract event specific results
-		results = df[[eventname, 'name', 'institute']]
+		results = df[[eventao5, 'name', 'institute']]
 
 		# Set new column names
 		results.columns = ['AO5', 'Name', 'Institute']
 		
 		# Drop NA values
 		results.dropna(inplace=True)
+
+		# If no data here, skip
+		if results.empty:
+			continue
 
 		# Create results directory if not present
 		if not os.path.isdir('results'):
@@ -162,9 +173,16 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 		results.to_csv(resultspath, index=False, sep='\t')
 		print(f"Event {i+1} Results saved to {resultspath}\n")
 
+		# Replace DNF with 99999 temporarily
+		results['AO5'] = results['AO5'].replace("DNF", 99999)
+
 		# Format time
 		results['AO5'] = pd.to_datetime(results['AO5'], unit='s').dt.strftime("%M:%S.%f")
 		results['AO5'] = results['AO5'].apply(format_time)
+
+		# Convert 99999 back to DNF
+		# 99999 formatted to 46:39.00 by the code above
+		results['AO5'] = results['AO5'].replace("46:39.00", "DNF")
 
 		# Compute strings
 		markdown_str = results.to_markdown(index=False, floatfmt=".2f", colalign=('center', 'left', 'left'))

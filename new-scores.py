@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 import os
+import sys
 from datetime import date, datetime
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -186,5 +187,25 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 # %%
 if __name__ == "__main__":
-	scores(eventdate='2021-06-05')
+	n = len(sys.argv)
+
+	if n == 1:
+		scores()
+	elif n == 2:
+		if ".csv" in sys.argv[1]:
+			scores(responses=sys.argv[1])
+		else:
+			scores(eventdate=sys.argv[1])
+	elif n == 3:
+		scores(eventdate=sys.argv[1], responses=sys.argv[2])
+	else:
+		print("Invalid Command Line Arguments. Correct Usage:")
+		print(f"python {__file__} [yyyy-mm-dd] [filename.csv]")
+		print(f"""
+	Example Usages:
+	-> python {__file__} 2021-06-05
+	-> python {__file__} datafilename.csv
+	-> python {__file__} 2021-06-05 datafilename.csv 
+	""")
+
 # %%

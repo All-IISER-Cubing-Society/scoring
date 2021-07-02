@@ -1,3 +1,13 @@
+- [AICS - Scoring](#aics---scoring)
+  * [Response Sheet Format](#response-sheet-format)
+  * [Getting Started](#getting-started)
+  * [Scoring - How to compute results](#scoring---how-to-compute-results)
+    + [Program Output](#program-output)
+    + [Automatically fetching the Responses Sheet](#automatically-fetching-the-responses-sheet)
+  * [Manual Scoring](#manual-scoring)
+    + [Data Preparation](#data-preparation)
+    + [Computing Results](#computing-results)
+
 # AICS - Scoring
 
 Code used in scoring/result generation for AICS events.

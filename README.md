@@ -96,6 +96,37 @@ The following columns:
 
 
 
+### Automatically fetching the Responses Sheet
+
+This is an optional setup, and the scoring program can be very much run without this. Simply download the sheet manually as CSV and run the scoring program.
+
+If you wish to automate this step, read on.
+
+The program `google-sheet.py` can actually automatically fetch the Form Responses Sheet and save it as `responses.csv`. It uses the `gspread` Python module, and requires some setup for Authentication.
+
+Follow the [Authentication Instructions](https://docs.gspread.org/en/v3.7.0/oauth2.html#enable-api-access-for-a-project) to Enable API access for a project and create a Service Account. 
+
+As instructed, store the downloaded JSON file containing the credentials as `service_account.json` and place it in specified directory:
+
+- **Windows:** `%APPDATA%\gspread\service_account.json`
+- **Linux:** `~/.config/gspread/service_account.json`
+
+There will also be a Client Email ID in the Google Dev Console. Go to the main spreadsheet, and Share it to the Service Account Client Email ID.
+
+
+
+The responses can now be fetched automatically by running
+
+```bash
+$ python google-sheet.py
+```
+
+
+
+After that, the scoring program can be run as instructed above.
+
+
+
 ---
 
 ## Manual Scoring

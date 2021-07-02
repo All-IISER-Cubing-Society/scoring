@@ -31,7 +31,7 @@ def ao5_calc(row, event=1):
 	conv_times = []
 
 	for i in times:
-		if str(i).upper() == "DNF" or str(i).upper == "DNS":
+		if str(i).upper() == "DNF" or str(i).upper() == "DNS":
 			dnf_counter += 1
 			continue
 		elif str(i) == "":

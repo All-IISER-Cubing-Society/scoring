@@ -67,7 +67,7 @@ The following columns:
 - If the current date is also the event date for which you want to compute results, then you can simply run the program directly:
 
   ```bash
-  $ python new-scores.py
+  $ python new_scores.py
   ```
 
   The program takes the current date and the `responses.csv` filename by default.
@@ -77,11 +77,11 @@ The following columns:
   Example Usages:
 
   ```bash
-  $ python new-scores.py 2021-06-05     // filename taken as responses.csv by default
+  $ python new_scores.py 2021-06-05     // filename taken as responses.csv by default
   
-  $ python new-scores.py datafilename.csv    // current date taken as default
+  $ python new_scores.py datafilename.csv    // current date taken as default
   
-  $ python new-scores.py 2021-06-05 datafilename.csv   // both date and file provided
+  $ python new_scores.py 2021-06-05 datafilename.csv   // both date and file provided
   ```
 
   
@@ -162,7 +162,7 @@ If the scoring program fails and you are unable to figure out why, the older sco
 
 ### Computing Results
 
-- Run the `manual-scores.py` program, and it will output the AO5 result for each participant in a separate line. It outputs just the average computed times.
+- Run the `manual_scores.py` program, and it will output the AO5 result for each participant in a separate line. It outputs just the average computed times.
 - Copy this whole output from the screen, and onto a new column in Google Sheets in the worksheet you formed to download as `times.csv`. [And not on the main responses worksheet.]
   - It is recommended to create a new column just left to the Names column and paste this data there.
 - Since the AO5 results column has been created, the 5 columns containing times for each attempt can be deleted.

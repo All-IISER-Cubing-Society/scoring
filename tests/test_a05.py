@@ -76,3 +76,26 @@ def test_dnf_and_dns():
     }
 
     assert ao5_calc(times, event=2) == "DNF"
+
+
+def test_missing_value():
+    times = {
+        "e2t1": 19.34,
+        "e2t2": "",
+        "e2t3": 21.49,
+        "e2t4": 20.42,
+        "e2t5": 17.78
+    }
+
+    assert ao5_calc(times, event=2) == 20.42
+
+def test_missing_value_with_dnf():
+    times = {
+        "e2t1": 19.34,
+        "e2t2": "",
+        "e2t3": 21.49,
+        "e2t4": "DNF",
+        "e2t5": 17.78
+    }
+
+    assert ao5_calc(times, event=2) == "DNF"

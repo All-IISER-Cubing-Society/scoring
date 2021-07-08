@@ -67,7 +67,13 @@ def whatsapp_string(row):
 	Returns:
 		str: WhatsApp String of the form "• AO5 - Name - Institute"
 	"""
-	return f"• {str(row['AO5'])} - {row['Name']} - {row['Institute']}"
+
+	if row['Institute']:
+		institute_string = f" - {row['Institute']}"
+	else:
+		institute_string = ""
+
+	return f"• {str(row['AO5'])} - {row['Name']}{institute_string}"
 
 # %%
 def format_time(time):

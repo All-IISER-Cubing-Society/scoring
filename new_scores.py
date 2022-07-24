@@ -232,7 +232,7 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 		# Print Strings
 		print(f"WhatsApp String - Event {i+1}\n")
-		print("**AO5 - Best - Name - Institute**")
+		print("*AO5 - Best - Name - Institute*")
 		for j in range(len(results)):
 			print(results.iloc[j]['whatsapp_str'])
 

@@ -58,6 +58,34 @@ def ao5_calc(row, event=1):
 		return round(tt/3.0,2)
 
 
+def best_time(row, event=1):
+	"""Compute the best time for a row and event
+
+	Args:
+		row (pd.DataFrame row): DataFrame row containing name, institute and times
+		event (int, optional): Event Number. Defaults to 1.
+	"""
+	# Generate event time column names
+	# For example, in event=1: e1t1, e1t2, e1t3, e1t4, e1t5
+	indexes = [f"e{event}t{i}" for i in range(1, 6)]
+
+	# Get times for the event
+	times = [row[index] for index in indexes]
+
+	dnf_counter = 0
+	conv_times = []
+
+	for i in times:
+		if str(i).upper() == "DNF" or str(i).upper() == "DNS":
+			dnf_counter += 1
+			continue
+		elif str(i) == "":
+			dnf_counter += 1
+			continue
+		conv_times.append(float(i))
+  
+	return min(conv_times)
+
 def whatsapp_string(row):
 	"""Generate WhatsApp String for a given DataFrame row
 
@@ -73,7 +101,7 @@ def whatsapp_string(row):
 	else:
 		institute_string = ""
 
-	return f"• {str(row['AO5'])} - {row['Name']}{institute_string}"
+	return f"• {str(row['AO5'])} - {str(row['Best'])} - {row['Name']}{institute_string}"
 
 # %%
 def format_time(time):
@@ -141,11 +169,13 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 	# Compute AO5 for each event
 	for i in range(1, no_of_events + 1):
 		df[f"e{i}ao5"] = df.apply(lambda row: ao5_calc(row, i), axis=1)
+		df[f"e{i}best"] = df.apply(lambda row: best_time(row, i), axis=1)
 
 
 	# Results Printing and Storing
 	for i in range(no_of_events):
 		eventao5 = f"e{i+1}ao5"
+		eventbest = f"e{i+1}best"
 
 		# Sorting will fail if AO5 column contains DNF
 		# Replace DNF with 99999 temporarily
@@ -156,12 +186,13 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 		# Replace 99999 with DNF again
 		df[eventao5] = df[eventao5].replace(99999, "DNF")
-
+		df[eventbest] = df[eventbest].replace(99999, "DNF")
+  
 		# Extract event specific results
-		results = df[[eventao5, 'name', 'institute']]
+		results = df[[eventao5, eventbest, 'name', 'institute']]
 
 		# Set new column names
-		results.columns = ['AO5', 'Name', 'Institute']
+		results.columns = ['AO5', 'Best', 'Name', 'Institute']
 		
 		# Drop NA values
 		results.dropna(inplace=True)
@@ -181,14 +212,19 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 		# Replace DNF with 99999 temporarily
 		results['AO5'] = results['AO5'].replace("DNF", 99999)
-
+		results['Best'] = results['Best'].replace("DNF", 99999)
+  
 		# Format time
 		results['AO5'] = pd.to_datetime(results['AO5'], unit='s').dt.strftime("%M:%S.%f")
 		results['AO5'] = results['AO5'].apply(format_time)
+  
+		results['Best'] = pd.to_datetime(results['Best'], unit='s').dt.strftime("%M:%S.%f")
+		results['Best'] = results['Best'].apply(format_time)
 
 		# Convert 99999 back to DNF
 		# 99999 formatted to 46:39.00 by the code above
 		results['AO5'] = results['AO5'].replace("46:39.00", "DNF")
+		results['Best'] = results['Best'].replace("46:39.00", "DNF")
 
 		# Compute strings
 		markdown_str = results.to_markdown(index=False, floatfmt=".2f", colalign=('center', 'left', 'left'))
@@ -196,6 +232,7 @@ def scores(responses="responses.csv", eventdate=date.today().isoformat()):
 
 		# Print Strings
 		print(f"WhatsApp String - Event {i+1}\n")
+		print("**AO5 - Best - Name - Institute**")
 		for j in range(len(results)):
 			print(results.iloc[j]['whatsapp_str'])
 
